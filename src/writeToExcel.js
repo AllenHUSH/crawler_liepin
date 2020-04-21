@@ -1,7 +1,7 @@
 const XLSX = require('xlsx'),
     fs = require('fs')
 
-let writeToExcel = (dataArr) => {
+let writeToExcel = (name,dataArr) => {
     fs.mkdir('results',()=>{});
     let wb = XLSX.utils.book_new();
     ws = XLSX.utils.json_to_sheet(dataArr);
@@ -11,6 +11,6 @@ let writeToExcel = (dataArr) => {
     let year = time.getFullYear().toString()
     let month = time.getMonth().toString()
     let day = time.getDate().toString()
-    XLSX.writeFile(wb, `./results/${year + month + day}.xls`); //将数据写入文件
+    XLSX.writeFile(wb, `./results/${year + month + day + name}.xls`); //将数据写入文件
 };
 module.exports = writeToExcel

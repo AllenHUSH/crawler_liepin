@@ -1,18 +1,20 @@
 const
     https = require('https'),
-    fs = require('fs'),
     cheerio = require('cheerio'),
     writeToExcel = require('./writeToExcel');
 
 
 class crawlData {
 
-    constructor(page) {
-
+    constructor() {
+        // 可修改的
+        this.keyWord = "新媒体"; //搜索的关键字
+        this.day = 1; //几日内发布的，可选1 3 7 30
+        this.page = 99; //搜索页数，最大99
+        // 不可修改的
         this.currentPage = 1;
         this.time = 5;
-        this.page = page;
-        this.baseUrl = 'https://www.liepin.com/zhaopin/?isAnalysis=&dqs=&pubTime=1&salary=&subIndustry=&industryType=&compscale=&key=%E6%96%B0%E5%AA%92%E4%BD%93&init=-1&searchType=1&headckid=d972e8aa8e1e9b4d&compkind=&fromSearchBtn=2&sortFlag=15&ckid=c271169962388d9a&degradeFlag=0&jobKind=&industries=&clean_condition=&siTag=rmq2QhgMEpRoDbxhhbxJDw%7EV6MwPcZ2ne9zYObRj7X8Rg&d_sfrom=search_prime&d_ckId=b72a40278e38614fcaf746600e0535d0&d_curPage=';
+        this.baseUrl = 'https://www.liepin.com/zhaopin/?isAnalysis=&dqs=&pubTime=' + this.day + '&salary=&subIndustry=&industryType=&compscale=&key=' + this.keyWord + '&init=-1&searchType=1&headckid=d972e8aa8e1e9b4d&compkind=&fromSearchBtn=2&sortFlag=15&ckid=c271169962388d9a&degradeFlag=0&jobKind=&industries=&clean_condition=&siTag=rmq2QhgMEpRoDbxhhbxJDw%7EV6MwPcZ2ne9zYObRj7X8Rg&d_sfrom=search_prime&d_ckId=b72a40278e38614fcaf746600e0535d0&d_curPage=';
         this.result = [];
         this.init();
 
@@ -22,7 +24,7 @@ class crawlData {
         let timer = setInterval(() => {
             if (this.currentPage > this.page) {
                 clearInterval(timer);
-                writeToExcel(this.result);
+                writeToExcel(this.keyWord, this.result);
                 console.log(`\x1B[46m完成，共计获取${this.result.length}条数据\x1B[49m`);
             } else {
                 this.getDataPackage(this.baseUrl + (this.currentPage + 1) + '&d_pageSize=40&d_headId=ad878683a46e56bca93e6f921e59a95&curPage=' + this.currentPage);
@@ -73,4 +75,4 @@ class crawlData {
     }
 }
 //  一个数据包40条，最多是99 * 40 = 3960条
-new crawlData(99);
+new crawlData();
